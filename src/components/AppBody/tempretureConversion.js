@@ -15,14 +15,14 @@ const celciusIntoFarenhit = (celTemp) => {
 
 const tempretureConversion = (selctedCityInfo, type = 'C') => {
 
-    const postString = type == 'C' ? '°C' : '°F';
+    const postString = type === 'C' ? '°C' : '°F';
     const tempCel = kelvinintoCelcius(selctedCityInfo?.main?.temp);
     const feels_likeCel = kelvinintoCelcius(selctedCityInfo?.main?.feels_like);
     const temp_minCel = kelvinintoCelcius(selctedCityInfo?.main?.temp_min);
     const temp_maxCel = kelvinintoCelcius(selctedCityInfo?.main?.temp_max);
 
 
-    if (type == 'C') {
+    if (type === 'C') {
         return {
             temp: tempCel + postString,
             feels_like: feels_likeCel + postString,

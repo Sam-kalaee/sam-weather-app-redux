@@ -1,8 +1,6 @@
 import { OPEN_WEATHER_API_TOKEN, OPEN_WEATHER_API_URL } from "../../commons/config";
 
 const fetchCityWeatherInfo = async (city) => {
-    const url = OPEN_WEATHER_API_URL
-    const appid = OPEN_WEATHER_API_TOKEN
     try {
         const rawResult = await fetch(`${OPEN_WEATHER_API_URL}?appid=${OPEN_WEATHER_API_TOKEN}&q=${city}`, {
             method: 'get',
@@ -18,7 +16,6 @@ const fetchCityWeatherInfo = async (city) => {
             message: err.message,
             status: 'err'
         };
-        throw err;
     }
 
 };
