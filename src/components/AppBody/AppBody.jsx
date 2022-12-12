@@ -1,13 +1,16 @@
-import React, { useContext } from 'react'
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import dateBuilder from '../../commons/functions/dateBuilder';
-import { AppContext } from '../../context/AppContext';
+import { unitConvertHandle } from '../../features/unitConvert/unitConvertSlice';
 import tempretureConversion from './tempretureConversion';
 
 const AppBody = () => {
-    const [appState, immutableSetState] = useContext(AppContext);
+    const unitConvert = useSelector((state) => state.unitConvert.value)
+    const selectedCityInfo = useSelector((state) => state.selectedCityInfo.value)
+    const dispatch = useDispatch()
 
 
-    if (!appState?.selctedCityInfo?.status) {
+    if (!selectedCityInfo?.status) {
         return <h1
             className="text-explain"
         >
@@ -16,18 +19,18 @@ const AppBody = () => {
     }
 
 
-    if (appState?.selctedCityInfo?.message) {
+    if (selectedCityInfo?.message) {
         return <h1
             className="text-explain"
         >
             {
-                appState?.selctedCityInfo?.message
+                selectedCityInfo?.message
             }
         </h1>
     }
 
 
-    const temprature = tempretureConversion(appState?.selctedCityInfo, appState?.unitTemp)
+    const temprature = tempretureConversion(selectedCityInfo, unitConvert)
 
 
     return (
@@ -38,7 +41,7 @@ const AppBody = () => {
             <div className="location-box">
 
                 <div className="location">
-                    {`${appState?.selctedCityInfo?.name}, ${appState?.selctedCityInfo?.sys?.country}`}
+                    {`${selectedCityInfo?.name}, ${selectedCityInfo?.sys?.country}`}
                 </div>
                 <div className="date">{dateBuilder(new Date())}</div>
             </div>
@@ -57,19 +60,19 @@ const AppBody = () => {
                             <i className="fa-solid fa-wind"></i>
                         </span>
                         {' '}
-                        {appState?.selctedCityInfo?.wind?.speed}m/s
+                        {selectedCityInfo?.wind?.speed}m/s
                     </p>
                     <br />
                     <small>
                         Humidity
                         {' '}
-                        {appState?.selctedCityInfo?.main?.humidity}%
+                        {selectedCityInfo?.main?.humidity}%
                     </small>
 
                 </div>
 
                 <div className="weather">
-                    {appState?.selctedCityInfo?.weather[0]?.description}
+                    {selectedCityInfo?.weather[0]?.description}
                 </div>
 
             </div>
@@ -80,23 +83,20 @@ const AppBody = () => {
                     className={
                         `
                     convert-button +
-                    ${(appState?.selctedCityInfo?.main?.temp > Number(12 + 273.15))
+                    ${(selectedCityInfo?.main?.temp > Number(12 + 273.15))
                             ? 'button-warm'
                             : 'button-cold'
                         }
                 `
                     }
                     onClick={async () => {
-                        immutableSetState((draft) => {
-                            if (appState?.unitTemp == 'C') {
-                                draft.unitTemp = 'F';
-                                return;
-                            }
-                            draft.unitTemp = 'C';
-                        });
+
+                        const newUnit = unitConvert === 'C' ? 'F' : 'C';
+
+                        dispatch(unitConvertHandle(newUnit))
                     }}
                 >
-                    Convert in {appState?.unitTemp == 'C' ? 'Fahrenheit' : 'Celsius'}
+                    Convert in {unitConvert === 'C' ? 'Fahrenheit' : 'Celsius'}
                 </button>
             </div>
 

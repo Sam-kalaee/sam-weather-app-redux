@@ -1,17 +1,17 @@
-import logo from './logo.svg';
 import './App.css';
 import Headers from './components/Headers/Headers';
 import AppBody from './components/AppBody/AppBody';
-import { useContext } from 'react';
-import { AppContext } from './context/AppContext';
+import { useSelector } from 'react-redux';
+
 
 function App() {
-  const [appState] = useContext(AppContext);
+
+  const selectedCityInfo = useSelector((state) => state.selectedCityInfo.value)
   return (
 
     <div
       className={
-        (appState?.selctedCityInfo?.main?.temp > Number(12 + 273.15))
+        (selectedCityInfo?.main?.temp > Number(12 + 273.15))
           ? 'app warm'
           : 'app'
       }

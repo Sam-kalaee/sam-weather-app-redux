@@ -1,10 +1,15 @@
-import React, { useContext, useState } from 'react'
-import { AppContext, immutableSetStateExternal } from '../../context/AppContext';
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { searchHandle } from '../../features/search/searchSlice';
+import { selectedCityInfoHandle } from '../../features/selectedCityInfo/selectedCityInfoSlice';
 import fetchCityWeatherInfo from '../../services/openweathermap/fetchCityWeatherInfo';
 
 const Headers = () => {
 
-    const [appState, immutableSetState] = useContext(AppContext);
+    const selectedCityInfo = useSelector((state) => state.selectedCityInfo.value)
+
+    const search = useSelector((state) => state.search.value)
+    const dispatch = useDispatch()
 
     return (
         <>
@@ -20,12 +25,10 @@ const Headers = () => {
                         type="text"
                         className="search-bar"
                         placeholder="Search..."
-                        value={appState.search}
+                        value={search}
                         onChange={(event) => {
                             const newSearch = event.target.value;
-                            immutableSetState((draft) => {
-                                draft.search = newSearch;
-                            });
+                            dispatch(searchHandle(newSearch))
                         }}
                     />
 
@@ -33,17 +36,15 @@ const Headers = () => {
                         className={
                             `
                             search-button +
-                            ${(appState?.selctedCityInfo?.main?.temp > Number(12 + 273.15))
+                            ${(selectedCityInfo?.main?.temp > Number(12 + 273.15))
                                 ? 'button-warm'
                                 : 'button-cold'
                             }
                         `
                         }
                         onClick={async () => {
-                            const result = await fetchCityWeatherInfo((appState?.search || '').toLowerCase())
-                            immutableSetState((draft) => {
-                                draft.selctedCityInfo = result;
-                            });
+                            const result = await fetchCityWeatherInfo((search || '').toLowerCase())
+                            dispatch(selectedCityInfoHandle(result))
                         }}
                     >
                         Find
