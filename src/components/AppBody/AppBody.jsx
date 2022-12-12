@@ -57,7 +57,7 @@ const AppBody = () => {
                             <i className="fa-solid fa-wind"></i>
                         </span>
                         {' '}
-                        {appState?.selctedCityInfo?.wind?.speed}km/h
+                        {appState?.selctedCityInfo?.wind?.speed}m/s
                     </p>
                     <br />
                     <small>
